@@ -106,3 +106,7 @@ mass_se_plot <- penguins |>
 mass_se_plot
 ```
 The standard error plot reinforces the strong body mass difference among penguin species. Gentoo penguins had a substantially higher estimated mean body mass than either Adelie or Chinstrap penguins, while Adelie means were similar across the three islands sampled. The relatively short standard error bars suggest that the estimated group means are fairly precise, although comparisons among islands remain limited because some species occur only on particular islands in this dataset.
+
+## Reflection on the Manual Workflow
+During this workshop, I learned that importing a dataset does not always mean it has been read correctly. When I first imported the mangrove survey file, R treated the field notes at the top as the column heading and returned only one column, which showed me that I needed to inspect the Console output instead of assuming the import worked. I corrected this by skipping the first five lines and converting different missing data codes into `NA`. Comparing the reef cover data as a tibble and as a base R data frame also helped me see why tibbles are useful, because they immediately display the number of rows, columns and variable types. I also saw how missing values affected the penguin summaries, as some mean values returned `NA` until I used `na.rm = TRUE`. Writing the code manually helped me understand each step of the workflow rather than only focusing on the final figure.
+
