@@ -1,6 +1,6 @@
 ---
 title: "R for Marine Science Workshop 1"
-author: "Your name here"
+author: "Austen Wong Won"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
  html_document:
@@ -29,22 +29,80 @@ knitr::opts_chunk$set(
 ```
 
 ## Introduction
+This workshop introduced reproducible data wrangling and visualisation workflows in R using environmental monitoring files and the Palmer Penguins dataset. I imported several file formats, diagnosed and corrected a messy mangrove survey import, and compared the display behaviour of a base R data frame with a tidyverse tibble. I then used the penguin morphological data to practise selecting, filtering, arranging, transforming and summarising biological observations.
 
 
-### Clear out environment
 ```{r housekeeping, message=FALSE, warning=FALSE, include=FALSE}
 rm(list=ls())
 ```
 
-### Load packages
+
 ```{r packages, message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 ```
 
-### Source script
+
 ```{r source-script1, message=FALSE, warning=FALSE, include=FALSE}
 source("Workshop1.R")
 ```
 
+## Summary of Body Mass by Species and Sex
 
+The summary table below shows differences in body mass between penguin species and sexes. Mean body mass was calculated after excluding missing body mass observations.
+```{r body-mass-summary}}
+biological_signal
+```
+## Body Mass Variation Across Species and Islands
 
+The boxplot visualises variation in body mass among penguin species, with sampling island shown by fill colour.
+```{r}
+mass_boxplot <- penguins |>
+  ggplot(aes(x = species, y = body_mass_g, fill = island)) +
+  geom_boxplot() +
+  labs(
+    title = "Body Mass Variation Across Palmer Penguin Species",
+    subtitle = "Individuals grouped by species and sampling island",
+    x = "Species",
+    y = "Body mass (g)",
+    fill = "Island"
+  ) +
+  theme_minimal()
+
+mass_boxplot
+```
+The boxplot indicates clear differences in body mass among penguin species. Gentoo penguins had substantially greater body mass than Adelie and Chinstrap penguins, while Adelie penguins showed variation across all three sampled islands. However, island patterns should be interpreted cautiously because some species were only recorded on particular islands, meaning that species identity and sampling location are not fully independent in this dataset.
+
+## Mean Body Mass with Standard Error
+
+This figure compares mean body mass among penguin species and sampling islands. Error bars show standard error, representing uncertainty around each estimated group mean.
+```{r}
+mass_se_plot <- penguins |>
+  group_by(species, island) |>
+  summarise(
+    mean_mass = mean(body_mass_g, na.rm = TRUE),
+    sd_mass = sd(body_mass_g, na.rm = TRUE),
+    n = sum(!is.na(body_mass_g)),
+    se_mass = sd_mass / sqrt(n),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = species, y = mean_mass, colour = island)) +
+  geom_point(size = 3) +
+  geom_errorbar(
+    aes(
+      ymin = mean_mass - se_mass,
+      ymax = mean_mass + se_mass
+    ),
+    width = 0.2
+  ) +
+  labs(
+    title = "Mean Body Mass of Palmer Penguin Species",
+    subtitle = "Error bars represent standard error",
+    x = "Species",
+    y = "Mean body mass (g)",
+    colour = "Island"
+  ) +
+  theme_minimal()
+
+mass_se_plot
+```
+The standard error plot reinforces the strong body mass difference among penguin species. Gentoo penguins had a substantially higher estimated mean body mass than either Adelie or Chinstrap penguins, while Adelie means were similar across the three islands sampled. The relatively short standard error bars suggest that the estimated group means are fairly precise, although comparisons among islands remain limited because some species occur only on particular islands in this dataset.
