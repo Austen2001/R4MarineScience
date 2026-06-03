@@ -2,8 +2,8 @@
 title: "R for Marine Science Workshop 1"
 author: "Austen Wong Won"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: 
- html_document:
+output:
+  html_document:
     code_folding: show
     collapse: no
     df_print: paged
@@ -14,44 +14,60 @@ output:
     theme: spacelab
     toc: yes
     toc_float: yes
-editor_options: 
+editor_options:
   chunk_output_type: inline
 ---
-
 
 ```{r setup, include=FALSE}
 # Set options, housekeeping
 knitr::opts_chunk$set(
-	echo = FALSE,
-	include = TRUE,
-	message = FALSE,
-	warning = FALSE)
+  echo = FALSE,
+  include = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
 ```
 
 ## Introduction
+
 This workshop introduced reproducible data wrangling and visualisation workflows in R using environmental monitoring files and the Palmer Penguins dataset. I imported several file formats, diagnosed and corrected a messy mangrove survey import, and compared the display behaviour of a base R data frame with a tidyverse tibble. I then used the penguin morphological data to practise selecting, filtering, arranging, transforming and summarising biological observations.
 
-
 ```{r housekeeping, message=FALSE, warning=FALSE, include=FALSE}
-rm(list=ls())
+rm(list = ls())
 ```
-
 
 ```{r packages, message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 ```
 
-
 ```{r source-script1, message=FALSE, warning=FALSE, include=FALSE}
 source("Workshop1.R")
+```
+
+## Final Manual Summary Pipeline
+
+The following pipeline groups penguin observations by species and sex, then calculates sample size, mean body mass and standard deviation while excluding missing body mass values.
+
+```{r final-pipeline, echo=TRUE, eval=FALSE}
+biological_signal <- penguins %>%
+  group_by(species, sex) %>%
+  summarise(
+    sample_size = n(),
+    mean_mass_g = mean(body_mass_g, na.rm = TRUE),
+    sd_mass_g = sd(body_mass_g, na.rm = TRUE),
+    .groups = "drop"
+  )
 ```
 
 ## Summary of Body Mass by Species and Sex
 
 The summary table below shows differences in body mass between penguin species and sexes. Mean body mass was calculated after excluding missing body mass observations.
-```{r body-mass-summary}}
+
+```{r body-mass-summary}
 biological_signal
 ```
+````
+
 ## Body Mass Variation Across Species and Islands
 
 The boxplot visualises variation in body mass among penguin species, with sampling island shown by fill colour.
