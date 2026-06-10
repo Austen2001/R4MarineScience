@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Austen Wong Won">
-<meta name="dcterms.date" content="2026-06-10">
+<meta name="dcterms.date" content="2026-06-11">
 
-<title>R for Marine Science Workshop 2</title>
+<title>R4MS Workshop 2 - Final Exercise</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -38,35 +38,20 @@ ul.task-list li input[type="checkbox"] {
 <link href="W2_FinalEx_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="W2_FinalEx_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="W2_FinalEx_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="W2_FinalEx_files/libs/bootstrap/bootstrap-aa3a43135dffe0bd0ae1bce533c0ec52.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="W2_FinalEx_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="W2_FinalEx_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="W2_FinalEx_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
 
-<body class="quarto-light">
+<body class="fullcontent quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#estuary-fish-survey-data-rescue-mission" id="toc-estuary-fish-survey-data-rescue-mission" class="nav-link active" data-scroll-target="#estuary-fish-survey-data-rescue-mission">Estuary Fish Survey: Data Rescue Mission</a></li>
-  <li><a href="#data-cleaning-and-integration" id="toc-data-cleaning-and-integration" class="nav-link" data-scroll-target="#data-cleaning-and-integration">Data Cleaning and Integration</a></li>
-  <li><a href="#statistical-summary-by-species-and-estuary-zone" id="toc-statistical-summary-by-species-and-estuary-zone" class="nav-link" data-scroll-target="#statistical-summary-by-species-and-estuary-zone">Statistical Summary by Species and Estuary Zone</a></li>
-  <li><a href="#fish-abundance-along-the-salinity-gradient" id="toc-fish-abundance-along-the-salinity-gradient" class="nav-link" data-scroll-target="#fish-abundance-along-the-salinity-gradient">Fish Abundance Along the Salinity Gradient</a></li>
-  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation</a></li>
-  <li><a href="#reflection-on-the-workflow" id="toc-reflection-on-the-workflow" class="nav-link" data-scroll-target="#reflection-on-the-workflow">Reflection on the Workflow</a></li>
-  </ul>
-</nav>
-</div>
+
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">R for Marine Science Workshop 2</h1>
+<h1 class="title">R4MS Workshop 2 - Final Exercise</h1>
 </div>
 
 
@@ -83,7 +68,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 10, 2026</p>
+      <p class="date">June 11, 2026</p>
     </div>
   </div>
   
@@ -95,220 +80,427 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="estuary-fish-survey-data-rescue-mission" class="level2">
-<h2 class="anchored" data-anchor-id="estuary-fish-survey-data-rescue-mission">Estuary Fish Survey: Data Rescue Mission</h2>
-<p>This workshop focused on extracting ecological information from messy datasets using advanced data wrangling in R. I combined fish catch records, spatial metadata, high-frequency water quality data and a species dictionary from the Ross River estuary into one clean master dataset. The workflow required reshaping data, standardising text fields, parsing timestamps, handling sensor errors, constructing explicit zero catches and joining multiple data sources.</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Here we are going to wrangle in messy data on the Ross River estuary fish surveys and produce final clean tables and figure. We have 4 separate files that were provided to us by a former PhD student. We know we have data for 4 sites, 4 species, and 30 days of sampling. We also have metadata on the sites and sensor data on the environmental conditions at each site.</p>
 </section>
-<section id="data-cleaning-and-integration" class="level2">
-<h2 class="anchored" data-anchor-id="data-cleaning-and-integration">Data Cleaning and Integration</h2>
-<p>The raw datasets contained several issues that prevented immediate analysis. Fish catch records were stored across multiple Excel sheets, site and species names used inconsistent spelling and formatting, timestamps in the sonde dataset were stored as text, and turbidity sensor failures were recorded as <code>-999.0</code>. I standardised site and species names, converted timestamps into date-time values, replaced turbidity failure codes with missing values and summarised the high-frequency water quality measurements into daily site means.</p>
-<p>I then joined daily environmental conditions and spatial metadata to the fish catch records. Because species that were not caught on a sampling day were absent from the original catch log, I built a complete site-date-species framework and converted these missing catch records into explicit zeros.</p>
+<section id="housekeeping" class="level1">
+<h1>Housekeeping</h1>
+</section>
+<section id="packages" class="level1">
+<h1>Packages</h1>
+</section>
+<section id="load-files" class="level1">
+<h1>Load files</h1>
+</section>
+<section id="main-dataset" class="level1">
+<h1>Main dataset</h1>
+<p>The catch data is split across 4 tabs in one excel file Load indivudally</p>
+</section>
+<section id="inspect-individual-tabs" class="level1">
+<h1>Inspect individual tabs</h1>
+<p>Here we are looking for anomalies between workbooks and any variable naming issues</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 104 × 4
+   site       date                species       count
+   &lt;chr&gt;      &lt;dttm&gt;              &lt;chr&gt;         &lt;dbl&gt;
+ 1 Lower_ross 2026-05-01 00:00:00 barramundi        6
+ 2 Lower_ross 2026-05-01 00:00:00 MANGROVE JACK     3
+ 3 Lower_ross 2026-05-01 00:00:00 bream             4
+ 4 Lower_ross 2026-05-01 00:00:00 flathead          2
+ 5 Lower_ross 2026-05-02 00:00:00 barramundi        1
+ 6 Lower_ross 2026-05-02 00:00:00 MANGROVE JACK     1
+ 7 Lower_ross 2026-05-02 00:00:00 bream             3
+ 8 Lower_ross 2026-05-02 00:00:00 flathead          3
+ 9 Lower_ross 2026-05-03 00:00:00 MANGROVE JACK     2
+10 Lower_ross 2026-05-03 00:00:00 flathead          3
+# ℹ 94 more rows</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 106 × 4
+   site     date                species       count
+   &lt;chr&gt;    &lt;dttm&gt;              &lt;chr&gt;         &lt;dbl&gt;
+ 1 Mid_Ross 2026-05-01 00:00:00 barramundi        4
+ 2 Mid_Ross 2026-05-01 00:00:00 MANGROVE JACK     2
+ 3 Mid_Ross 2026-05-01 00:00:00 bream             2
+ 4 Mid_Ross 2026-05-01 00:00:00 flathead          3
+ 5 Mid_Ross 2026-05-02 00:00:00 MANGROVE JACK     1
+ 6 Mid_Ross 2026-05-02 00:00:00 bream             2
+ 7 Mid_Ross 2026-05-02 00:00:00 flathead          3
+ 8 Mid_Ross 2026-05-03 00:00:00 barramundi        3
+ 9 Mid_Ross 2026-05-03 00:00:00 MANGROVE JACK     2
+10 Mid_Ross 2026-05-03 00:00:00 bream             1
+# ℹ 96 more rows</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 107 × 4
+   site       date                species       count
+   &lt;chr&gt;      &lt;dttm&gt;              &lt;chr&gt;         &lt;dbl&gt;
+ 1 ROSS MOUTH 2026-05-01 00:00:00 barramundi        3
+ 2 ROSS MOUTH 2026-05-01 00:00:00 MANGROVE JACK     2
+ 3 ROSS MOUTH 2026-05-01 00:00:00 flathead          9
+ 4 ROSS MOUTH 2026-05-02 00:00:00 MANGROVE JACK     1
+ 5 ROSS MOUTH 2026-05-02 00:00:00 bream             3
+ 6 ROSS MOUTH 2026-05-02 00:00:00 flathead          4
+ 7 ROSS MOUTH 2026-05-03 00:00:00 barramundi        1
+ 8 ROSS MOUTH 2026-05-03 00:00:00 MANGROVE JACK     1
+ 9 ROSS MOUTH 2026-05-03 00:00:00 bream             2
+10 ROSS MOUTH 2026-05-03 00:00:00 flathead          7
+# ℹ 97 more rows</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 110 × 4
+   site       date                species       count
+   &lt;chr&gt;      &lt;dttm&gt;              &lt;chr&gt;         &lt;dbl&gt;
+ 1 Upper Ross 2026-05-01 00:00:00 barramundi        5
+ 2 Upper Ross 2026-05-01 00:00:00 bream             2
+ 3 Upper Ross 2026-05-01 00:00:00 flathead          6
+ 4 Upper Ross 2026-05-02 00:00:00 barramundi        8
+ 5 Upper Ross 2026-05-02 00:00:00 MANGROVE JACK     1
+ 6 Upper Ross 2026-05-02 00:00:00 bream             2
+ 7 Upper Ross 2026-05-02 00:00:00 flathead          4
+ 8 Upper Ross 2026-05-03 00:00:00 barramundi        4
+ 9 Upper Ross 2026-05-03 00:00:00 bream             2
+10 Upper Ross 2026-05-04 00:00:00 barramundi        5
+# ℹ 100 more rows</code></pre>
+</div>
+</div>
+<p>We definitely have var naming issues, but they look to be the same. Will check again once we have combined together # Bind rows together</p>
+</section>
+<section id="preliminary-checks" class="level1">
+<h1>Preliminary checks</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 427 × 4
+   site       date                species       count
+   &lt;chr&gt;      &lt;dttm&gt;              &lt;chr&gt;         &lt;dbl&gt;
+ 1 Lower_ross 2026-05-01 00:00:00 barramundi        6
+ 2 Lower_ross 2026-05-01 00:00:00 MANGROVE JACK     3
+ 3 Lower_ross 2026-05-01 00:00:00 bream             4
+ 4 Lower_ross 2026-05-01 00:00:00 flathead          2
+ 5 Lower_ross 2026-05-02 00:00:00 barramundi        1
+ 6 Lower_ross 2026-05-02 00:00:00 MANGROVE JACK     1
+ 7 Lower_ross 2026-05-02 00:00:00 bream             3
+ 8 Lower_ross 2026-05-02 00:00:00 flathead          3
+ 9 Lower_ross 2026-05-03 00:00:00 MANGROVE JACK     2
+10 Lower_ross 2026-05-03 00:00:00 flathead          3
+# ℹ 417 more rows</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  site       date                species       count
+  &lt;chr&gt;      &lt;dttm&gt;              &lt;chr&gt;         &lt;dbl&gt;
+1 Lower_ross 2026-05-01 00:00:00 barramundi        6
+2 Lower_ross 2026-05-01 00:00:00 MANGROVE JACK     3
+3 Lower_ross 2026-05-01 00:00:00 bream             4
+4 Lower_ross 2026-05-01 00:00:00 flathead          2
+5 Lower_ross 2026-05-02 00:00:00 barramundi        1
+6 Lower_ross 2026-05-02 00:00:00 MANGROVE JACK     1</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 427
+Columns: 4
+$ site    &lt;chr&gt; "Lower_ross", "Lower_ross", "Lower_ross", "Lower_ross", "Lower…
+$ date    &lt;dttm&gt; 2026-05-01, 2026-05-01, 2026-05-01, 2026-05-01, 2026-05-02, 2…
+$ species &lt;chr&gt; "barramundi", "MANGROVE JACK", "bream", "flathead", "barramund…
+$ count   &lt;dbl&gt; 6, 3, 4, 2, 1, 1, 3, 3, 2, 3, 1, 8, 4, 1, 1, 2, 1, 2, 4, 2, 2,…</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [427 × 4] (S3: tbl_df/tbl/data.frame)
+ $ site   : chr [1:427] "Lower_ross" "Lower_ross" "Lower_ross" "Lower_ross" ...
+ $ date   : POSIXct[1:427], format: "2026-05-01" "2026-05-01" ...
+ $ species: chr [1:427] "barramundi" "MANGROVE JACK" "bream" "flathead" ...
+ $ count  : num [1:427] 6 3 4 2 1 1 3 3 2 3 ...</code></pre>
+</div>
+</div>
+<p>Can’t tell from these outputs how many levels of site and species we have. Two options: let’s check those explicitly by using distinct() or can convert to factors Let’s look at the distinct values first, as we might need to clean before converting to factor vars.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  site      
+  &lt;chr&gt;     
+1 Lower_ross
+2 Mid_Ross  
+3 ROSS MOUTH
+4 Upper Ross</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  species      
+  &lt;chr&gt;        
+1 barramundi   
+2 MANGROVE JACK
+3 bream        
+4 flathead     </code></pre>
+</div>
+</div>
+<p>OK, so we have four species in there as well as four sites which look to be located at different points on the Ross River. Sites look like they correspond to select zones on the river estuary but we’ll need to check this against the metadata, once loaded. We also have some issues with the site names and species names which will need to be cleaned before we can join with the metadata and taxonomic dictionary.3</p>
+<section id="next-steps-for-catch-data" class="level3">
+<h3 class="anchored" data-anchor-id="next-steps-for-catch-data">Next steps for catch data:</h3>
+<ul>
+<li>Fix site names and place in reasonable order.</li>
+<li>Can decide this now or we can load the metadata and ensure consistency</li>
+<li>Fix species names - to do this we’ll need to make consistent and then use the taxonomic dictionary to translate to scientific names.</li>
+</ul>
+<p>First we’ll need to load the metadata and see what that has in store for us!</p>
+</section>
+</section>
+<section id="load-metadata" class="level1">
+<h1>Load metadata</h1>
+</section>
+<section id="checks" class="level1">
+<h1>Checks</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  site_name    lat   lon zone      
+  &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     
+1 Upper_Ross -19.3  147. Upstream  
+2 mid_ross   -19.3  147. Middle    
+3 LOWER ROSS -19.3  147. Downstream
+4 ross_mouth -19.2  147. Marine    </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 4
+Columns: 4
+$ site_name &lt;chr&gt; "Upper_Ross", "mid_ross", "LOWER ROSS", "ross_mouth"
+$ lat       &lt;dbl&gt; -19.31, -19.28, -19.26, -19.25
+$ lon       &lt;dbl&gt; 146.74, 146.78, 146.81, 146.83
+$ zone      &lt;chr&gt; "Upstream", "Middle", "Downstream", "Marine"</code></pre>
+</div>
+</div>
+<p>Site names are all over the place in the metadata too - will need to standardise in both of these tbls before we can combine them</p>
+<section id="fix-site-names-in-data-and-metadata-and-convert-character-to-factor-variables" class="level3">
+<h3 class="anchored" data-anchor-id="fix-site-names-in-data-and-metadata-and-convert-character-to-factor-variables">Fix site names in data and metadata and convert character to factor variables</h3>
+</section>
+</section>
+<section id="recheck" class="level1">
+<h1>Recheck</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [427 × 4] (S3: tbl_df/tbl/data.frame)
+ $ site   : Factor w/ 4 levels "lower_ross","mid_ross",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ date   : POSIXct[1:427], format: "2026-05-01" "2026-05-01" ...
+ $ species: Factor w/ 4 levels "barramundi","MANGROVE JACK",..: 1 2 3 4 1 2 3 4 2 4 ...
+ $ count  : num [1:427] 6 3 4 2 1 1 3 3 2 3 ...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [4 × 4] (S3: tbl_df/tbl/data.frame)
+ $ site_name: Factor w/ 4 levels "upper_ross","mid_ross",..: 1 2 3 4
+ $ lat      : num [1:4] -19.3 -19.3 -19.3 -19.2
+ $ lon      : num [1:4] 147 147 147 147
+ $ zone     : Factor w/ 4 levels "Upstream","Middle",..: 1 2 3 4</code></pre>
+</div>
+</div>
+<p>OK site names fixed in both now (but note the vars themselves still have different names - site vs site_name). We can fix this when we join the datasets together. Next we need to do something about the species names. Can use the taxonomic dictionary to get scientific names for the species.</p>
+<section id="load-taxonomic-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="load-taxonomic-dictionary">Load Taxonomic Dictionary</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  common_name   scientific_name          
+  &lt;chr&gt;         &lt;chr&gt;                    
+1 barramundi    Lates calcarifer         
+2 mangrove_jack Lutjanus argentimaculatus
+3 bream         Acanthopagrus spp.       
+4 flathead      Platycephalus spp.       </code></pre>
+</div>
+</div>
+<p>We’ll need to check the common names in the catch log match those in the taxonomic dictionary before we do the join.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  species      
+  &lt;fct&gt;        
+1 barramundi   
+2 MANGROVE JACK
+3 bream        
+4 flathead     </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  common_name  
+  &lt;chr&gt;        
+1 barramundi   
+2 mangrove_jack
+3 bream        
+4 flathead     </code></pre>
+</div>
+</div>
+</section>
+<section id="standardise-species-common-name-variable-in-the-catch-log-to-match-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="standardise-species-common-name-variable-in-the-catch-log-to-match-dictionary">Standardise species (common name) variable in the catch log to match dictionary</h3>
+<p>But species name here is still actually the common name</p>
+</section>
+<section id="create-new-variable-scientific_name-in-catch-log-by-joining-with-taxonomic-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="create-new-variable-scientific_name-in-catch-log-by-joining-with-taxonomic-dictionary">Create new variable (“scientific_name”) in catch log by joining with taxonomic dictionary</h3>
+<p>OK so let’s check our catch log again. SHould have species and site names fixed</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 427
+Columns: 6
+$ site            &lt;fct&gt; lower_ross, lower_ross, lower_ross, lower_ross, lower_…
+$ date            &lt;dttm&gt; 2026-05-01, 2026-05-01, 2026-05-01, 2026-05-01, 2026-…
+$ species         &lt;chr&gt; "barramundi", "mangrove_jack", "bream", "flathead", "b…
+$ count           &lt;dbl&gt; 6, 3, 4, 2, 1, 1, 3, 3, 2, 3, 1, 8, 4, 1, 1, 2, 1, 2, …
+$ common_name     &lt;chr&gt; "barramundi", "mangrove_jack", "bream", "flathead", "b…
+$ scientific_name &lt;chr&gt; "Lates calcarifer", "Lutjanus argentimaculatus", "Acan…</code></pre>
+</div>
+</div>
+<p>Yep we are good.</p>
+<p>We know we need to add the metadata in, but we also have this dataset with sonde/sensor information in it</p>
+</section>
+</section>
+<section id="load-the-sonde-data" class="level1">
+<h1>Load the sonde data</h1>
+<p>(Code for this is written in separate script which we can source from here)</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [11,520 × 5] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ site       : chr [1:11520] "upper_ross" "mid_ross" "lower_ross" "ross_mouth" ...
+ $ timestamp  : chr [1:11520] "01/05/2026 00:00" "01/05/2026 00:00" "01/05/2026 00:00" "01/05/2026 00:00" ...
+ $ temperature: num [1:11520] 23.7 24.1 24.2 24.6 26.1 ...
+ $ salinity   : num [1:11520] 4.05 15.74 28.93 33.89 3.96 ...
+ $ turbidity  : num [1:11520] 6.49 49.22 48.14 49.81 25.18 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   site = col_character(),
+  ..   timestamp = col_character(),
+  ..   temperature = col_double(),
+  ..   salinity = col_double(),
+  ..   turbidity = col_double()
+  .. )
+ - attr(*, "problems")=&lt;pointer: 0xb4919d5d0&gt; 
+Rows: 11,520
+Columns: 5
+$ site        &lt;chr&gt; "upper_ross", "mid_ross", "lower_ross", "ross_mouth", "upp…
+$ timestamp   &lt;chr&gt; "01/05/2026 00:00", "01/05/2026 00:00", "01/05/2026 00:00"…
+$ temperature &lt;dbl&gt; 23.71379, 24.13302, 24.23558, 24.64147, 26.06955, 24.62576…
+$ salinity    &lt;dbl&gt; 4.054812, 15.742962, 28.934938, 33.891350, 3.962750, 12.05…
+$ turbidity   &lt;dbl&gt; 6.489046, 49.216967, 48.135752, 49.811493, 25.184739, 34.8…</code></pre>
+</div>
+</div>
+<section id="notes-on-sensor-data" class="level4">
+<h4 class="anchored" data-anchor-id="notes-on-sensor-data">Notes on sensor data</h4>
+<ul>
+<li>We had 15-minute sonde data for the same 4 sites and 30 days of sampling. The script sourced above turned into daily data and removed outliers</li>
+<li>There are three different environmental vars measured: temperature, salinity, and turbidity.</li>
+<li>Could investigate effects of all three on fish spp abundance or pick one? Need to think about prior research and hypotheses etc.</li>
+</ul>
+</section>
+<section id="ok-now-we-can-join-catch-data-with-metadata-and-sensor-data" class="level3">
+<h3 class="anchored" data-anchor-id="ok-now-we-can-join-catch-data-with-metadata-and-sensor-data">OK, now we can join catch data with metadata and sensor data</h3>
+</section>
+</section>
+<section id="check" class="level1">
+<h1>Check</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 427
+Columns: 12
+$ site            &lt;chr&gt; "lower_ross", "lower_ross", "lower_ross", "lower_ross"…
+$ date            &lt;dttm&gt; 2026-05-01, 2026-05-01, 2026-05-01, 2026-05-01, 2026-…
+$ species         &lt;chr&gt; "barramundi", "mangrove_jack", "bream", "flathead", "b…
+$ count           &lt;dbl&gt; 6, 3, 4, 2, 1, 1, 3, 3, 2, 3, 1, 8, 4, 1, 1, 2, 1, 2, …
+$ common_name     &lt;chr&gt; "barramundi", "mangrove_jack", "bream", "flathead", "b…
+$ scientific_name &lt;chr&gt; "Lates calcarifer", "Lutjanus argentimaculatus", "Acan…
+$ lat             &lt;dbl&gt; -19.26, -19.26, -19.26, -19.26, -19.26, -19.26, -19.26…
+$ lon             &lt;dbl&gt; 146.81, 146.81, 146.81, 146.81, 146.81, 146.81, 146.81…
+$ zone            &lt;fct&gt; Downstream, Downstream, Downstream, Downstream, Downst…
+$ mean_temp       &lt;dbl&gt; 23.79137, 23.79137, 23.79137, 23.79137, 23.98099, 23.9…
+$ mean_salinity   &lt;dbl&gt; 28.35281, 28.35281, 28.35281, 28.35281, 27.74122, 27.7…
+$ mean_turbidity  &lt;dbl&gt; 27.90740, 27.90740, 27.90740, 27.90740, 24.09800, 24.0…</code></pre>
+</div>
+</div>
+<p>OK starting to look good now!</p>
+<p>But we only have 427 rows of data - doesn’t seem right.. How many should we have?</p>
+<p>4 x spp 4 x sites 30 surveys</p>
+<p>4<em>4</em>30</p>
+<p>480!!</p>
+<p>There are some days where there were zero counts of certain species at different sites. We’ll need to wrangle these into a complete dataset with 480 rows, where the zero counts are explicitly represented as 0 rather than NA. This is important for our subsequent analyses and visualisations, as we want to be able to distinguish between true absences (0) and missing data (NA).</p>
+</section>
+<section id="wrangle-final-dataset" class="level1">
+<h1>Wrangle final dataset</h1>
+</section>
+<section id="main-data-wrangle-done" class="level1">
+<h1>======== MAIN DATA WRANGLE DONE!! ========</h1>
+<section id="now-we-can-start-thinking-about-hypotheses-and-what-might-be-going-on-in-the-ecology-of-these-species-in-this-ecosystem" class="level2">
+<h2 class="anchored" data-anchor-id="now-we-can-start-thinking-about-hypotheses-and-what-might-be-going-on-in-the-ecology-of-these-species-in-this-ecosystem">Now we can start thinking about hypotheses and what might be going on in the ecology of these species in this ecosystem</h2>
+<section id="first-we-probably-want-to-first-check-that-there-is-an-actual-difference-in-env-vars-among-zones" class="level3">
+<h3 class="anchored" data-anchor-id="first-we-probably-want-to-first-check-that-there-is-an-actual-difference-in-env-vars-among-zones">First we probably want to first check that there is an actual difference in env vars among zones</h3>
+<section id="salinity" class="level4">
+<h4 class="anchored" data-anchor-id="salinity">Salinity</h4>
 <div class="cell">
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<caption>Quality checks for the completed estuary master dataset.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Check</th>
-<th style="text-align: right;">Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Total site-date-species records</td>
-<td style="text-align: right;">480</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Explicit zero-catch records</td>
-<td style="text-align: right;">53</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Missing scientific names</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Missing estuary zones</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Missing salinity values</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Remaining legacy turbidity errors</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>The completed master dataset contained <strong>480 site-date-species records</strong>, including <strong>53 explicit zero-catch observations</strong>. No scientific names, estuary zones or salinity values were missing, and all legacy turbidity error codes were removed before analysis.</p>
-</section>
-<section id="statistical-summary-by-species-and-estuary-zone" class="level2">
-<h2 class="anchored" data-anchor-id="statistical-summary-by-species-and-estuary-zone">Statistical Summary by Species and Estuary Zone</h2>
-<p>The table below summarises fish abundance and daily mean salinity for each species across the four estuary zones. Abundance statistics include zero catches, so they represent the full sampling framework rather than only days when a species was recorded.</p>
-<div class="cell">
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<caption>Fish abundance and daily salinity summary statistics by scientific species and estuary zone.</caption>
-<colgroup>
-<col style="width: 27%">
-<col style="width: 13%">
-<col style="width: 3%">
-<col style="width: 27%">
-<col style="width: 27%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Scientific name</th>
-<th style="text-align: left;">Estuary zone</th>
-<th style="text-align: right;">n</th>
-<th style="text-align: left;">Fish abundance, mean ± SD</th>
-<th style="text-align: left;">Daily salinity, mean ± SD</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Acanthopagrus spp.</td>
-<td style="text-align: left;">Upstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2.57 ± 1.65</td>
-<td style="text-align: left;">4.99 ± 0.19</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Acanthopagrus spp.</td>
-<td style="text-align: left;">Middle</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2.23 ± 1.57</td>
-<td style="text-align: left;">14.91 ± 0.4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Acanthopagrus spp.</td>
-<td style="text-align: left;">Downstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2 ± 1.51</td>
-<td style="text-align: left;">27.97 ± 0.35</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Acanthopagrus spp.</td>
-<td style="text-align: left;">Marine</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2.33 ± 1.88</td>
-<td style="text-align: left;">34.02 ± 0.1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Lates calcarifer</td>
-<td style="text-align: left;">Upstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">4.8 ± 1.69</td>
-<td style="text-align: left;">4.99 ± 0.19</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Lates calcarifer</td>
-<td style="text-align: left;">Middle</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2.2 ± 1.32</td>
-<td style="text-align: left;">14.91 ± 0.4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Lates calcarifer</td>
-<td style="text-align: left;">Downstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">1.6 ± 1.4</td>
-<td style="text-align: left;">27.97 ± 0.35</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Lates calcarifer</td>
-<td style="text-align: left;">Marine</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">1.57 ± 1.36</td>
-<td style="text-align: left;">34.02 ± 0.1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Lutjanus argentimaculatus</td>
-<td style="text-align: left;">Upstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">1.9 ± 1.16</td>
-<td style="text-align: left;">4.99 ± 0.19</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Lutjanus argentimaculatus</td>
-<td style="text-align: left;">Middle</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">1.97 ± 1.13</td>
-<td style="text-align: left;">14.91 ± 0.4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Lutjanus argentimaculatus</td>
-<td style="text-align: left;">Downstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2 ± 1.64</td>
-<td style="text-align: left;">27.97 ± 0.35</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Lutjanus argentimaculatus</td>
-<td style="text-align: left;">Marine</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">1.5 ± 1.14</td>
-<td style="text-align: left;">34.02 ± 0.1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Platycephalus spp.</td>
-<td style="text-align: left;">Upstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2.3 ± 1.82</td>
-<td style="text-align: left;">4.99 ± 0.19</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Platycephalus spp.</td>
-<td style="text-align: left;">Middle</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">1.97 ± 1.45</td>
-<td style="text-align: left;">14.91 ± 0.4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Platycephalus spp.</td>
-<td style="text-align: left;">Downstream</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">2.1 ± 0.96</td>
-<td style="text-align: left;">27.97 ± 0.35</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Platycephalus spp.</td>
-<td style="text-align: left;">Marine</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: left;">5.67 ± 1.3</td>
-<td style="text-align: left;">34.02 ± 0.1</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-<section id="fish-abundance-along-the-salinity-gradient" class="level2">
-<h2 class="anchored" data-anchor-id="fish-abundance-along-the-salinity-gradient">Fish Abundance Along the Salinity Gradient</h2>
-<p>The multi-panel figure below visualises abundance patterns along the salinity gradient, from freshwater-influenced upstream sites through to the marine estuary mouth. Each panel represents one scientific species.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="W2_FinalEx_files/figure-html/salinity-abundance-figure-1.png" class="img-fluid figure-img" width="1056"></p>
-<figcaption>Fish abundance along the Ross River estuary salinity gradient. Counts include explicit zero catches across all surveyed sites and sampling dates.</figcaption>
+<p><img src="W2_FinalEx_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Definitely differences in salinity, as we’d expect!! And we know there has been work on some of these species about responses to salinity gradients.</p>
+<p>Let’s check the other two env vars too, just to be sure.</p>
+</section>
+</section>
+<section id="turbidity" class="level3">
+<h3 class="anchored" data-anchor-id="turbidity">Turbidity</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W2_FinalEx_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="interpretation" class="level2">
-<h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
-<p>The integrated dataset revealed clear species-specific abundance patterns along the estuary salinity gradient. <em>Lates calcarifer</em> had the highest mean abundance in the low-salinity upstream zone, averaging 4.80 individuals, and declined toward the marine zone, where its mean abundance was 1.57 individuals. In contrast, <em>Platycephalus</em> spp. were most abundant in the marine zone, averaging 5.67 individuals compared with approximately 2 individuals in the remaining zones.</p>
-<p><em>Acanthopagrus</em> spp. showed relatively small differences among zones, with mean abundance ranging from 2.00 to 2.57 individuals. <em>Lutjanus argentimaculatus</em> also showed limited variation across most of the gradient, although its lowest mean abundance occurred in the marine zone. These results demonstrate how combining biological records with cleaned environmental data can reveal ecological patterns that were not visible in the separate raw files.</p>
+<section id="and-temperature" class="level3">
+<h3 class="anchored" data-anchor-id="and-temperature">And temperature</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W2_FinalEx_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>OK so we’ll continue with salinity as our main env var of interest, but we know that there are also differences in turbidity and temperature across the zones, which could also be influencing fish abundance patterns. We can discuss this in the interpretation of our results and consider potential confounding effects of these other environmental variables in our discussion.</p>
+<section id="remake-salinity-plot-nicely-for-publication" class="level4">
+<h4 class="anchored" data-anchor-id="remake-salinity-plot-nicely-for-publication">Remake salinity plot nicely for publication</h4>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="W2_FinalEx_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Salinity Gradient across zones. Ross River Estuary System, Townsville, NQ, Australia May 2026.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="reflection-on-the-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="reflection-on-the-workflow">Reflection on the Workflow</h2>
-<p>This workshop showed me that ecological analysis often depends on careful data management before any biological interpretation is possible. The most important part of the workflow was recognising that species missing from the original catch log did not necessarily represent missing data. In this survey design, they represented valid zero catches. Creating a complete site-date-species matrix therefore made the final analysis more defensible because it accounted for both captures and non-detections.</p>
-<p>I also learned how small formatting inconsistencies can prevent datasets from joining correctly. Site names that referred to the same location were written with different capitalisation, spaces and underscores, while species names also required standardisation before being matched to the taxonomic dictionary. Parsing timestamps and removing the <code>-999.0</code> turbidity sensor failures were equally important because environmental values needed to be accurate before they could be interpreted alongside fish abundance.</p>
-<p>AI assistance helped me structure the workflow and choose suitable functions for cleaning, joining and summarizing the datasets. However, I still needed to check each intermediate output, identify an error in the initial salinity summary calculation and rerun the corrected analysis. This reinforced that AI can support a reproducible workflow, but the biological interpretation and quality control still require careful checking by the researcher.</p>
+</section>
+</section>
+</section>
+<section id="now-we-can-turn-to-patterns-in-fish-abundance" class="level1">
+<h1>Now we can turn to patterns in fish abundance</h1>
+</section>
+<section id="calculate-summary-stats" class="level1">
+<h1>Calculate summary stats</h1>
+</section>
+<section id="and-plot" class="level1">
+<h1>And plot</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W2_FinalEx_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 
 </main>
