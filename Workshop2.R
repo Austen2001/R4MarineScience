@@ -566,19 +566,17 @@ dictionary_clean
 # Clean high frequency water quality sensor data
 sonde_clean <- estuary_sonde |>
   mutate(
-    # Standardise site names so they match the catch and metadata tables
     site = site |>
       str_trim() |>
       str_to_lower() |>
       str_replace_all("\\s+", "_"),
     
-    # Convert character timestamps into formal date time objects
     datetime = dmy_hm(timestamp),
     
-    # Extract the daily sampling date for matching with fish catches
     sampling_date = as.Date(datetime),
     
-    # Convert the known turbidity sensor failure code into NA
+    salinity = if_else(salinity < 0, NA_real_, salinity),
+    
     turbidity = na_if(turbidity, -999.0)
   ) |>
   select(site, datetime, sampling_date, temperature, salinity, turbidity)
