@@ -1,0 +1,16 @@
+day,growth_pattern,survival_probability
+60,No shrinking,1
+90,No shrinking,0.97
+120,No shrinking,0.91
+150,No shrinking,0.85
+180,No shrinking,0.79
+60,Single shrinking event,1
+90,Single shrinking event,1
+120,Single shrinking event,0.98
+150,Single shrinking event,0.95
+180,Single shrinking event,0.93
+60,Multiple shrinking events,1
+90,Multiple shrinking events,1
+120,Multiple shrinking events,1
+150,Multiple shrinking events,1
+180,Multiple shrinking events,1
